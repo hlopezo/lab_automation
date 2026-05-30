@@ -1,0 +1,10 @@
+dvc
+dvc-s3
+mlflow
+pandas
+scikit-learn
+numpy
+pytest
+jupytext
+ipykernel
+evidently

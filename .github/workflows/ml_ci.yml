@@ -1,0 +1,40 @@
+name: MLOps CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-and-report:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: "pip"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install flake8 pytest
+
+    - name: Run flake8
+      run: flake8 src/
+
+    - name: Run pytest
+      run: pytest tests/
+
+    - name: DVC Pull
+      run: dvc pull || echo "DVC pull skipped"
+
+    - name: Generate Report
+      run: |
+        echo "## CI Report" >> $GITHUB_STEP_SUMMARY
+        echo "Pipeline completed successfully" >> $GITHUB_STEP_SUMMARY
